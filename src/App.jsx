@@ -61,12 +61,12 @@ const App = () => {
 
           <CameraFeed onEmotionUpdate={setEmotions} />
 
-          <div className="bg-surface p-8 rounded-3xl border border-border-subtle shadow-sm transition-all duration-500">
+          <div className="bg-surface p-6 sm:p-8 rounded-3xl border border-border-subtle shadow-sm transition-all duration-500">
             <h2 className="text-text-muted text-xs font-semibold tracking-wide uppercase mb-3 transition-colors duration-500">Current Mood</h2>
             <div className="flex items-baseline gap-4">
               <div
                 className={classNames(
-                  "text-6xl font-extrabold transition-all duration-500",
+                  "text-4xl sm:text-6xl font-extrabold transition-all duration-500",
                   { "text-text-main": isFaceVisible, "text-text-muted/20 animate-pulse": !isFaceVisible }
                 )}
               >

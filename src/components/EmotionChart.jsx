@@ -79,7 +79,7 @@ const EmotionChart = ({ emotions }) => {
     };
 
     return (
-        <div className="w-full h-64">
+        <div className="w-full h-64 max-w-full overflow-hidden">
             <Bar options={options} data={data} />
         </div>
     );
