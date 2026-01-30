@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Globe } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 const Footer = () => {
     return (
