@@ -27,9 +27,10 @@ const App = () => {
   const [lastDominant, setLastDominant] = useState(null);
 
   const dominant = getDominantEmotion(emotions);
+  const isFaceVisible = emotions.length > 0;
 
   useEffect(() => {
-    if (dominant.label === 'Sad' || dominant.label === 'Angry') {
+    if (isFaceVisible && (dominant.label === 'Sad' || dominant.label === 'Angry')) {
       if (dominant.label !== lastDominant) {
         const quotes = MOOD_SUPPORT[dominant.label];
         const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
@@ -40,7 +41,7 @@ const App = () => {
       setActiveQuote(null);
       setLastDominant(dominant.label);
     }
-  }, [dominant.label]);
+  }, [dominant.label, isFaceVisible]);
 
   return (
     <Layout>
@@ -64,13 +65,18 @@ const App = () => {
             <h2 className="text-text-muted text-xs font-semibold tracking-wide uppercase mb-3 transition-colors duration-500">Current Mood</h2>
             <div className="flex items-baseline gap-4">
               <div
-                className="text-6xl font-extrabold text-text-main transition-all duration-500"
+                className={classNames(
+                  "text-6xl font-extrabold transition-all duration-500",
+                  { "text-text-main": isFaceVisible, "text-text-muted/20 animate-pulse": !isFaceVisible }
+                )}
               >
-                {dominant.label}
+                {isFaceVisible ? dominant.label : 'Searching...'}
               </div>
-              <div className="text-xl font-medium text-text-muted transition-colors duration-500">
-                {Math.round(dominant.score * 100)}%
-              </div>
+              {isFaceVisible && (
+                <div className="text-xl font-medium text-text-muted transition-colors duration-500">
+                  {Math.round(dominant.score * 100)}%
+                </div>
+              )}
             </div>
 
             {/* Progress bar for dominant emotion */}
@@ -78,7 +84,7 @@ const App = () => {
               <div
                 className="h-full transition-all duration-500 ease-out"
                 style={{
-                  width: `${dominant.score * 100}%`,
+                  width: isFaceVisible ? `${dominant.score * 100}%` : '0%',
                   backgroundColor: dominant.color || '#d1d5db'
                 }}
               />
@@ -92,7 +98,7 @@ const App = () => {
             <h3 className="text-text-muted font-semibold text-xs uppercase tracking-wide mb-8 border-b border-border-subtle pb-4 transition-colors duration-500">
               Mood Spectrum
             </h3>
-            <div className="flex-grow flex items-center justify-center">
+            <div className="flex-grow flex items-center justify-center opacity-100 transition-opacity duration-500" style={{ opacity: isFaceVisible ? 1 : 0.3 }}>
               <EmotionChart emotions={emotions} />
             </div>
           </div>
@@ -100,11 +106,16 @@ const App = () => {
           {/* Additional Info Box */}
           <div className="bg-surface p-6 rounded-3xl border border-border-subtle shadow-sm transition-all duration-500">
             <div className="flex gap-4 items-center">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" />
+              <div className={classNames(
+                "w-2.5 h-2.5 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.4)] transition-all duration-500",
+                isFaceVisible ? "bg-emerald-500" : "bg-stone-300 dark:bg-stone-700 shadow-none"
+              )} />
               <div>
-                <h4 className="text-text-main font-bold text-sm transition-colors duration-500">Active</h4>
+                <h4 className="text-text-main font-bold text-sm transition-colors duration-500">
+                  {isFaceVisible ? 'Analysis Active' : 'Calibrating'}
+                </h4>
                 <p className="text-text-muted text-xs mt-0.5 font-medium transition-colors duration-500">
-                  Optimized for natural detection
+                  {isFaceVisible ? 'Optimized for natural detection' : 'Waiting for visual contact'}
                 </p>
               </div>
             </div>

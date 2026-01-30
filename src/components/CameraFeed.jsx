@@ -10,6 +10,7 @@ const CameraFeed = ({ onEmotionUpdate }) => {
     const [webcamRunning, setWebcamRunning] = useState(false);
     const [error, setError] = useState(null);
     const [status, setStatus] = useState("Initializing...");
+    const [isFaceDetected, setIsFaceDetected] = useState(false);
     const faceLandmarkerRef = useRef(null);
     const requestRef = useRef(null);
     const lastVideoTimeRef = useRef(-1);
@@ -110,6 +111,10 @@ const CameraFeed = ({ onEmotionUpdate }) => {
                     const blendshapes = results.faceBlendshapes[0].categories;
                     const emotionData = calculateEmotions(blendshapes);
                     onEmotionUpdate(emotionData);
+                    setIsFaceDetected(true);
+                } else {
+                    onEmotionUpdate([]);
+                    setIsFaceDetected(false);
                 }
             } catch (e) {
                 // Suppress mid-loop noise
@@ -144,6 +149,18 @@ const CameraFeed = ({ onEmotionUpdate }) => {
 
             {/* Overlay UI */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none p-6 text-center">
+                {webcamRunning && !isFaceDetected && (
+                    <div className="flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-700">
+                        <div className="p-4 bg-white/5 backdrop-blur-md rounded-full border border-white/10 mb-2">
+                            <ScanFace className="text-white/20 w-12 h-12" />
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-white/80 text-sm font-semibold tracking-wide">Waiting to see you...</p>
+                            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-bold">Face Detection Active</p>
+                        </div>
+                    </div>
+                )}
+
                 {!isModelLoaded && !error && (
                     <div className="flex flex-col items-center gap-4 text-stone-400">
                         <Loader2 size={32} className="animate-spin opacity-50" />
