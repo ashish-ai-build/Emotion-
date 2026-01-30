@@ -1,19 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './components/Layout';
 import CameraFeed from './components/CameraFeed';
 import EmotionChart from './components/EmotionChart';
 import { getDominantEmotion } from './utils/emotionMapping';
 import classNames from 'classnames';
+import { ScanFace, Activity, Heart, Info, Quote } from 'lucide-react';
 
-function App() {
+const MOOD_SUPPORT = {
+  Sad: [
+    "It's okay to feel this way. Tomorrow is a fresh start.",
+    "Breathe. This moment is temporary, but your strength is permanent.",
+    "Be kind to yourself today. You are doing enough.",
+    "Every cloud has a silver lining. Hold on to hope."
+  ],
+  Angry: [
+    "Take a deep breath. Peace starts from within.",
+    "Release the tension. You are in control of your calm.",
+    "Don't let a moment steal your peace. Let it go.",
+    "Cool heads and kind hearts win the day."
+  ]
+};
+
+const App = () => {
   const [emotions, setEmotions] = useState([]);
+  const [activeQuote, setActiveQuote] = useState(null);
+  const [lastDominant, setLastDominant] = useState(null);
+
   const dominant = getDominantEmotion(emotions);
+
+  useEffect(() => {
+    if (dominant.label === 'Sad' || dominant.label === 'Angry') {
+      if (dominant.label !== lastDominant) {
+        const quotes = MOOD_SUPPORT[dominant.label];
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        setActiveQuote(randomQuote);
+        setLastDominant(dominant.label);
+      }
+    } else {
+      setActiveQuote(null);
+      setLastDominant(dominant.label);
+    }
+  }, [dominant.label]);
 
   return (
     <Layout>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full h-full">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
         {/* Main Camera Feed Region */}
         <div className="lg:col-span-2 flex flex-col gap-6">
+          {activeQuote && (
+            <div className="bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 p-6 rounded-3xl animate-in fade-in slide-in-from-top-4 duration-500 flex items-start gap-4 shadow-sm">
+              <div className="p-2 bg-emerald-500/10 rounded-xl">
+                <Heart className="text-emerald-500 w-5 h-5 fill-emerald-500/20" />
+              </div>
+              <p className="text-emerald-800 dark:text-emerald-200 text-sm font-medium italic leading-relaxed">
+                "{activeQuote}"
+              </p>
+            </div>
+          )}
+
           <CameraFeed onEmotionUpdate={setEmotions} />
 
           <div className="bg-surface p-8 rounded-3xl border border-border-subtle shadow-sm transition-all duration-500">
