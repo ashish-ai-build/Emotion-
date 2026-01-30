@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -8,6 +8,9 @@ const Footer = () => {
             <div className="flex gap-4">
                 <a href="https://github.com/ashish-ai-build" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">
                     <Github className="w-5 h-5" />
+                </a>
+                <a href="https://www.linkedin.com/in/ashish-choudhary-b63b65328/" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-500 transition-colors">
+                    <Linkedin className="w-5 h-5" />
                 </a>
             </div>
         </footer>
