@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaceLandmarker, FilesetResolver } from '@mediapipe/tasks-vision';
 import { calculateEmotions, getDominantEmotion } from '../utils/emotionMapping';
 import classNames from 'classnames';
-import { Camera, Loader2, RefreshCw, AlertCircle, ShieldAlert } from 'lucide-react';
+import { Camera, Loader2, RefreshCw, AlertCircle, ShieldAlert, ScanFace } from 'lucide-react';
 
 const CameraFeed = ({ onEmotionUpdate }) => {
     const videoRef = useRef(null);
